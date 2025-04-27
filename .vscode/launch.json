@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiReservasApplication<api_reservas>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "api.reserva.api_reservas.ApiReservasApplication",
+            "projectName": "api_reservas",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
