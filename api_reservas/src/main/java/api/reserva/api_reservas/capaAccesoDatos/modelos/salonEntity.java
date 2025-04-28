@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SalonEntity {
-    int id;
-    int numeroDeSalon;
+    Integer id;
+    Integer numeroDeSalon;
 }

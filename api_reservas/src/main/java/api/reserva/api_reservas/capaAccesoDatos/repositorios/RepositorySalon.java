@@ -67,14 +67,15 @@ public class RepositorySalon {
             String consulta = "SELECT * FROM " + nombreTabla;
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
             ResultSet resultado = sentencia.executeQuery();
-
+    
             while (resultado.next()) {
                 SalonEntity salon = new SalonEntity();
                 salon.setId(resultado.getInt("id"));
                 salon.setNumeroDeSalon(resultado.getInt("numeroDeSalon"));
+                System.out.println("Salón recuperado: ID = " + salon.getId() + ", NumeroDeSalon = " + salon.getNumeroDeSalon());
                 listaSalones.add(salon);
             }
-
+    
             resultado.close();
             sentencia.close();
         } catch (Exception e) {

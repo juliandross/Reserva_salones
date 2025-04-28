@@ -1,7 +1,7 @@
-package api.reserva.api_reservas.capaAccesoDatos.modelos;
+package api.reserva.api_reservas.capaServicios.DTO;
 
+import java.sql.Date;
 import java.sql.Time;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,21 +9,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
+// This DTO is used fot confirming a create, delete and update reservation
 @Data
-@AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReservaEntity {
-    Integer id;
+@AllArgsConstructor
+public class CrearReservaDTO {
     String nombres;
     String apellidos;
-    Integer cantidadDePersonas;
-    SalonEntity salon;
+    int cantidadDePersonas;
+    int idSalon;
     Date fecha;
     Time horaInicio;
     Time horaFin;
     String estado;
 }
-
