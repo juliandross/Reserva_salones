@@ -1,1 +1,57 @@
-<p>reserva-form works!</p>
+<div class="form-container">
+    <h2 class="form-title">Crear Reserva</h2>
+    <form (ngSubmit)="crearReserva()" #reservaForm="ngForm">
+        <!-- Nombres -->
+        <div class="form-group">
+            <label for="nombres">Nombres:</label>
+            <input type="text" id="nombres" name="nombres" class="form-control" [(ngModel)]="reserva.nombres"
+                required />
+        </div>
+
+        <!-- Apellidos -->
+        <div class="form-group">
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos" class="form-control" [(ngModel)]="reserva.apellidos"
+                required />
+        </div>
+
+        <!-- Cantidad de Personas -->
+        <div class="form-group">
+            <label for="cantidadDePersonas">Cantidad de Personas:</label>
+            <input type="number" id="cantidadDePersonas" name="cantidadDePersonas" class="form-control"
+                [(ngModel)]="reserva.cantidadDePersonas" required />
+        </div>
+
+        <!-- Número de Salón -->
+        <div class="form-group">
+            <label for="numeroSalon">Número de Salón:</label>
+            <input type="number" id="numeroSalon" name="numeroSalon" class="form-control"
+                [(ngModel)]="reserva.numeroSalon" required />
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" class="form-control" [(ngModel)]="reserva.fecha" required />
+        </div>
+
+        <!-- Hora de Inicio -->
+        <div class="form-group">
+            <label for="horaInicio">Hora de Inicio:</label>
+            <input type="time" id="horaInicio" name="horaInicio" class="form-control" [(ngModel)]="reserva.horaInicio"
+                required />
+        </div>
+
+        <!-- Hora de Fin -->
+        <div class="form-group">
+            <label for="horaFin">Hora de Fin:</label>
+            <input type="time" id="horaFin" name="horaFin" class="form-control" [(ngModel)]="reserva.horaFin"
+                required />
+        </div>
+
+        <!-- Botón de Enviar -->
+        <button type="submit" class="btn" style="background-color: #4caf50; color: white;">
+            Guardar Reserva
+        </button>
+    </form>
+</div>

@@ -15,14 +15,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CrearReservaDTO {
-    String nombres;
-    String apellidos;
-    int cantidadDePersonas;
-    //int idSalon;
-    int numeroSalon;
-    Date fecha;
-    Time horaInicio;
-    Time horaFin;
-    String estado;
+public class RespuestaCrearReservaDTO {
+    CrearReservaDTO reservaCreada;
+    String mensaje;
+    Boolean exito; // true si la reserva fue creada, false si no fue creada
 }

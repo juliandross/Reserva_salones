@@ -15,6 +15,7 @@ import api.reserva.api_reservas.capaAccesoDatos.repositorios.RepositoryReserva;
 import api.reserva.api_reservas.capaAccesoDatos.repositorios.RepositorySalon;
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.RespuestaCrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.mapper.Mapper;
 
 @Service
@@ -39,30 +40,47 @@ public class ServicesReserva {
                 .collect(Collectors.toList());
         return listaReservasDTO;
     }
-
-    public CrearReservaDTO crearReserva(CrearReservaDTO crearReservaDTO) {
+    public RespuestaCrearReservaDTO crearReserva(CrearReservaDTO crearReservaDTO) {
+        // Respuesta
+        RespuestaCrearReservaDTO respuestaCrearReservaDTO = new RespuestaCrearReservaDTO();
+    
         // Validar que el número de salón sea válido
-        if (crearReservaDTO.getIdSalon() <= 0) {
-            throw new IllegalArgumentException("El número de salón debe ser mayor que 0.");
+        if (crearReservaDTO.getNumeroSalon() <= 0) {
+            respuestaCrearReservaDTO.setReservaCreada(null);
+            respuestaCrearReservaDTO.setMensaje("Número de salón no válido.");
+            respuestaCrearReservaDTO.setExito(false); // false si la reserva no fue creada
+            return respuestaCrearReservaDTO;
         }
-        
+    
         // Verificar disponibilidad del salón
         boolean disponible = repositoryReserva.verificarDisponibilidadSalon(
-            crearReservaDTO.getIdSalon(),
             crearReservaDTO.getFecha(),
             crearReservaDTO.getHoraInicio(),
             crearReservaDTO.getHoraFin()
         );
-
-    if (!disponible) {
-        throw new IllegalArgumentException("El salón no está disponible en la fecha y hora especificadas.");
-    }
+    
+        if (!disponible) {
+            respuestaCrearReservaDTO.setReservaCreada(null);
+            respuestaCrearReservaDTO.setMensaje("El salón no está disponible en la fecha y hora seleccionadas.");
+            respuestaCrearReservaDTO.setExito(false); // false si la reserva no fue creada
+            return respuestaCrearReservaDTO;
+        }
+    
         // Convertir el DTO a una entidad
         ReservaEntity reservaEntity = mapper.crearMapper().map(crearReservaDTO, ReservaEntity.class);
+        System.out.println("ReservaEntity: " + reservaEntity.getNombres());
+    
+        // Buscar el salón por número
+        SalonEntity salon = repositorySalon.buscarPorNumero(crearReservaDTO.getNumeroSalon());
+        if (salon == null) {
+            respuestaCrearReservaDTO.setReservaCreada(null);
+            respuestaCrearReservaDTO.setMensaje("El salón con el número proporcionado no existe.");
+            respuestaCrearReservaDTO.setExito(false); // false si la reserva no fue creada
+            return respuestaCrearReservaDTO;
+        }
+        System.out.println("SalonEntity: " + salon.getId() + " " + salon.getNumeroDeSalon());
     
         // Asignar el salón a la entidad
-        SalonEntity salon = new SalonEntity();
-        salon.setId(crearReservaDTO.getIdSalon());
         reservaEntity.setSalon(salon);
     
         // Guardar la entidad en el repositorio
@@ -77,7 +95,12 @@ public class ServicesReserva {
         }
     
         // Convertir la entidad guardada de nuevo a un DTO
-        return mapper.crearMapper().map(reservaGuardada, CrearReservaDTO.class);
+        crearReservaDTO = mapper.crearMapper().map(reservaGuardada, CrearReservaDTO.class);
+    
+        respuestaCrearReservaDTO.setReservaCreada(crearReservaDTO);
+        respuestaCrearReservaDTO.setMensaje("Reserva creada correctamente.");
+        respuestaCrearReservaDTO.setExito(true); // true si la reserva fue creada
+        return respuestaCrearReservaDTO;
     }
 
     public int aceptarReserva(int idReserva) {

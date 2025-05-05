@@ -40,7 +40,7 @@ public class RepositoryReserva {
         System.out.println("Salon encontrado con ID: " + idSalon);
         // Asignar el salón a la reserva
         reserva.setSalon(salon);
-
+        
         try {
             conexionBD.conectar();
 
@@ -299,7 +299,7 @@ public class RepositoryReserva {
         return 0;
     }
     //Verificar disponibilidad de salon
-    public boolean verificarDisponibilidadSalon(int idSalon, Date fecha, Time horaInicio, Time horaFin) {
+    public boolean verificarDisponibilidadSalon(Date fecha, Time horaInicio, Time horaFin) {
         boolean disponible = true;
 
         try {
@@ -307,14 +307,13 @@ public class RepositoryReserva {
 
             // Consulta SQL para verificar solapamiento de horarios
             String consulta = "SELECT COUNT(*) AS total FROM " + nombreTabla + " " +
-                            "WHERE salon = ? AND fecha = ? " +
+                            "WHERE fecha = ? " +
                             "AND ((? < horaFin AND ? > horaInicio))";
 
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
-            sentencia.setInt(1, idSalon);
-            sentencia.setDate(2, fecha);
-            sentencia.setTime(3, horaInicio);
-            sentencia.setTime(4, horaFin);
+            sentencia.setDate(1, fecha);
+            sentencia.setTime(2, horaInicio);
+            sentencia.setTime(3, horaFin);
 
             ResultSet resultado = sentencia.executeQuery();
 

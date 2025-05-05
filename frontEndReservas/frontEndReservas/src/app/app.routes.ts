@@ -4,6 +4,8 @@ import { ReservasListComponent } from './reservas/reservas-list/reservas-list.co
 import { ReservaFormComponent } from './reservas/reserva-form/reserva-form.component';
 
 export const routes: Routes = [
-    { path: '', component: ReservasListComponent }, // Home principal
+    { path: '', component: ReservasListComponent, pathMatch:'full'}, // Home principal
+    { path: 'listaReservas', component: ReservasListComponent }, // Subpágina para ver la lista de reservas
+    { path: 'editar-reserva/:id', component: ReservaFormComponent }, // Subpágina para editar reserva
     { path: 'add-reserva', component: ReservaFormComponent } // Subpágina para añadir reserva
 ];

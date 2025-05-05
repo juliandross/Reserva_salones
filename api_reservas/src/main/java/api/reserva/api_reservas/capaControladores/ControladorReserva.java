@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.RespuestaCrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaEditarReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaReservaDTO;
 import api.reserva.api_reservas.capaServicios.services.ServicesReserva;
@@ -41,10 +42,13 @@ public class ControladorReserva {
     }
     
     @PostMapping("/reserva")
-    public ResponseEntity<CrearReservaDTO> crearReserva(@RequestBody CrearReservaDTO crearReservaDTO) {
+    public ResponseEntity<RespuestaCrearReservaDTO> crearReserva(@RequestBody CrearReservaDTO crearReservaDTO) {
         System.out.println("Entrando al controlador de reservas para crear una reserva");
-        CrearReservaDTO reservaCreada = servicesReserva.crearReserva(crearReservaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservaCreada);
+        RespuestaCrearReservaDTO response = servicesReserva.crearReserva(crearReservaDTO);
+        if(response.getExito()){
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
     @PostMapping("/reserva/aceptar/{id}")
     public ResponseEntity<RespuestaReservaDTO> aceptarReserva(@PathVariable int id) {

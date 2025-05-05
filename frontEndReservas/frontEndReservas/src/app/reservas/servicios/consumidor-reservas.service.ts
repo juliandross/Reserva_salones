@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reserva } from '../modelos/reserva';
 import { RespuestaSimple } from '../modelos/respuestaSimple';
+import { RespuestaCreacionReserva } from '../modelos/respuestaCreacionReserva';
+import { ReservaCreacion } from '../modelos/reservaCreacion';
 @Injectable({
   providedIn: 'root'
 })
@@ -20,9 +22,10 @@ export class ConsumidorReservasService {
     return ListaReservas;
   }    
 
-  createReserva(reserva: Reserva): Observable<Reserva> {
+  createReserva(reserva: ReservaCreacion): Observable<RespuestaCreacionReserva> {
     console.log("Llamando a la API para crear una reserva", reserva);
-    const objReserva: Observable<Reserva> = this.htpp.post<Reserva>(`${this.apiUrl}/reservas`, reserva, { headers: this.httpHeaders });
+    reserva.estado = "PENDIENTE"; // Establecer el estado por defecto
+    const objReserva: Observable<RespuestaCreacionReserva> = this.htpp.post<RespuestaCreacionReserva>(`${this.apiUrl}/reserva`, reserva, { headers: this.httpHeaders });
     console.log("Reserva creada:", objReserva);
     return objReserva;
   }
