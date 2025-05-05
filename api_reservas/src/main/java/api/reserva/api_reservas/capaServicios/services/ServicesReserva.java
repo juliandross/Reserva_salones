@@ -76,12 +76,12 @@ public class ServicesReserva {
         return mapper.crearMapper().map(reservaGuardada, CrearReservaDTO.class);
     }
 
-    public boolean aceptarReserva(int idReserva) {
+    public int aceptarReserva(int idReserva) {
         // Lógica para aceptar la reserva
         return repositoryReserva.aceptarReserva(idReserva);
     }
 
-    public boolean rechazarReserva(int idReserva) {
+    public int rechazarReserva(int idReserva) {
         // Lógica para rechazar la reserva
         return repositoryReserva.rechazarReserva(idReserva);
     }

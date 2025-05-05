@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.RespuestaReservaDTO;
 import api.reserva.api_reservas.capaServicios.services.ServicesReserva;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,26 +43,38 @@ public class ControladorReserva {
         CrearReservaDTO reservaCreada = servicesReserva.crearReserva(crearReservaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservaCreada);
     }
-
     @PostMapping("/reserva/aceptar/{id}")
-    public ResponseEntity<Boolean> aceptarReserva(@PathVariable int id) {
+    public ResponseEntity<RespuestaReservaDTO> aceptarReserva(@PathVariable int id) {
         System.out.println("Entrando al controlador de reservas para aceptar una reserva con ID: " + id);
-        boolean reservaAceptada = servicesReserva.aceptarReserva(id);
-        if (reservaAceptada) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        int reservaAceptada = servicesReserva.aceptarReserva(id);
+        if (reservaAceptada==0) {
+            return ResponseEntity.ok(new RespuestaReservaDTO(true, "Reserva aceptada correctamente."));
+        } 
+        if(reservaAceptada==1){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new RespuestaReservaDTO(false, "La reserva ya fue aceptada."));
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new RespuestaReservaDTO(false, "No se encontró la reserva con el ID especificado."));
         }
     }
-
+    
     @PostMapping("/reserva/rechazar/{id}")
-    public ResponseEntity<Boolean> rechazarReserva(@PathVariable int id) {
+    public ResponseEntity<RespuestaReservaDTO> rechazarReserva(@PathVariable int id) {
         System.out.println("Entrando al controlador de reservas para rechazar una reserva con ID: " + id);
-        boolean reservaRechazada = servicesReserva.rechazarReserva(id);
-        if (reservaRechazada) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        int reservaRechazada = servicesReserva.rechazarReserva(id);
+        if (reservaRechazada==0) {
+            return ResponseEntity.ok(new RespuestaReservaDTO(true, "Reserva rechazada correctamente."));
+        } 
+        if(reservaRechazada==1){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new RespuestaReservaDTO(false, "La reserva ya fue rechazada."));
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new RespuestaReservaDTO(false, "No se encontró la reserva con el ID especificado."));
         }
     }
+    
 }

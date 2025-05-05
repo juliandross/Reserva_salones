@@ -1,7 +1,7 @@
 // filepath: d:\Ingenieria\7 semestre\IS III\P2\frontEndReservas\frontEndReservas\src\app\app.routes.ts
 import { Routes } from '@angular/router';
-import { ReservasListComponent } from './reservas-list/reservas-list.component';
-import { ReservaFormComponent } from './reserva-form/reserva-form.component';
+import { ReservasListComponent } from './reservas/reservas-list/reservas-list.component';
+import { ReservaFormComponent } from './reservas/reserva-form/reserva-form.component';
 
 export const routes: Routes = [
     { path: '', component: ReservasListComponent }, // Home principal

@@ -234,10 +234,25 @@ public class RepositoryReserva {
         return reserva != null ? Optional.of(reserva) : Optional.empty();
     }
     //Aceptar reserva
-    public boolean aceptarReserva(int idReserva) {
+    public int aceptarReserva(int idReserva) {
         int resultado = -1;
         try{
             conexionBD.conectar();
+            // Verificar si la reserva ya esta aceptada
+            String consultaVerificacion = "SELECT estado FROM " + nombreTabla + " WHERE id = ?";
+            PreparedStatement sentenciaVerificacion = conexionBD.getConnection().prepareStatement(consultaVerificacion);
+            sentenciaVerificacion.setInt(1, idReserva);
+            ResultSet resultadoVerificacion = sentenciaVerificacion.executeQuery();
+            if (resultadoVerificacion.next()) {
+                String estadoActual = resultadoVerificacion.getString("estado");
+                if ("Aceptada".equalsIgnoreCase(estadoActual)) {
+                    System.out.println("La reserva ya está aceptada.");
+                    return 1; // La reserva ya está aceptada
+                }
+            } else {
+                System.out.println("No se encontró la reserva con ID: " + idReserva);
+                return -1; // Reserva no encontrada
+            }
             String consulta = "UPDATE " + nombreTabla + " SET estado = 'Aceptada' WHERE id = "+ idReserva;
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
             resultado = sentencia.executeUpdate();
@@ -248,25 +263,39 @@ public class RepositoryReserva {
         } finally {
             conexionBD.desconectar();
         }
-        return resultado > 0;
+        return 0;
     }
     //Rechazar reserva
-    public boolean rechazarReserva(int idReserva) {
+    public int rechazarReserva(int idReserva) {
         int resultado = -1;
         try{
             conexionBD.conectar();
+            // Verificar si la reserva ya esta rechazada
+            String consultaVerificacion = "SELECT estado FROM " + nombreTabla + " WHERE id = ?";
+            PreparedStatement sentenciaVerificacion = conexionBD.getConnection().prepareStatement(consultaVerificacion);
+            sentenciaVerificacion.setInt(1, idReserva);
+            ResultSet resultadoVerificacion = sentenciaVerificacion.executeQuery();
+            if (resultadoVerificacion.next()) {
+                String estadoActual = resultadoVerificacion.getString("estado");
+                if ("Rechazada".equalsIgnoreCase(estadoActual)) {
+                    System.out.println("La reserva ya está rechazada.");
+                    return 1; // La reserva ya está rechazada
+                }
+            } else {
+                System.out.println("No se encontró la reserva con ID: " + idReserva);
+                return -1; // Reserva no encontrada
+            }
             String consulta = "UPDATE " + nombreTabla + " SET estado = 'Rechazada' WHERE id = "+ idReserva;
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
             resultado = sentencia.executeUpdate();
             sentencia.close();
-            return resultado > 0;
         } catch (SQLException e) {
             System.err.println("Error al rechazar la reserva: " + e.getMessage());
             e.printStackTrace();
         } finally {
             conexionBD.desconectar();
         }
-        return resultado > 0;
+        return 0;
     }
     //Verificar disponibilidad de salon
     public boolean verificarDisponibilidadSalon(int idSalon, Date fecha, Time horaInicio, Time horaFin) {
