@@ -114,4 +114,32 @@ public class RepositorySalon {
         }
         return salon;
     }
+
+    public SalonEntity buscarPorNumero(int numeroDeSalon) {
+        SalonEntity salon = null;
+        try {
+            conexionBD.conectar();
+            String consulta = "SELECT * FROM " + nombreTabla + " WHERE numeroDeSalon = ?";
+            PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
+            sentencia.setInt(1, numeroDeSalon);
+            ResultSet resultado = sentencia.executeQuery();
+    
+            if (resultado.next()) {
+                salon = new SalonEntity();
+                salon.setId(resultado.getInt("id"));
+                salon.setNumeroDeSalon(resultado.getInt("numeroDeSalon"));
+                System.out.println("Salón encontrado con número: " + salon.getNumeroDeSalon());
+            } else {
+                System.out.println("No se encontró el salón con número: " + numeroDeSalon);
+            }
+    
+            resultado.close();
+            sentencia.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            conexionBD.desconectar();
+        }
+        return salon;
+    }
 }

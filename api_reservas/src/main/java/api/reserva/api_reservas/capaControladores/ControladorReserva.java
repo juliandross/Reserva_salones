@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.RespuestaEditarReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaReservaDTO;
 import api.reserva.api_reservas.capaServicios.services.ServicesReserva;
 
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -74,6 +77,18 @@ public class ControladorReserva {
         else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new RespuestaReservaDTO(false, "No se encontró la reserva con el ID especificado."));
+        }
+    }
+
+    @PutMapping("reserva/{id}")
+    public ResponseEntity<RespuestaEditarReservaDTO> actualizarReserva(@PathVariable int id, @RequestBody ReservaDTO reserva) {
+        System.out.println("Entrando al controlador de reservas para actualizar una reserva con ID: " + id);
+        reserva = servicesReserva.actualizarReserva(id,reserva);
+        if (reserva != null) {
+            return ResponseEntity.ok(new RespuestaEditarReservaDTO(true, "Reserva actualizada correctamente.", reserva));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new RespuestaEditarReservaDTO(false, "No se encontró la reserva con el ID especificado.", reserva));
         }
     }
     

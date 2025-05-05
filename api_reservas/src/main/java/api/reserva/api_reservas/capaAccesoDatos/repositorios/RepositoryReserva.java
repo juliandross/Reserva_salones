@@ -126,10 +126,11 @@ public class RepositoryReserva {
         return listaReservas.isEmpty() ? Optional.empty() : Optional.of(listaReservas);
     }
     //Actualizar reserva
-    public Optional<ReservaEntity> actualizarReserva(ReservaEntity reserva) {
-        System.out.println("Actualizando reserva con ID: " + reserva.getId());
+    public Optional<ReservaEntity> actualizarReserva(int reservaId, ReservaEntity reserva) {
+        System.out.println("Actualizando reserva con ID: " + reservaId);
         try {
             conexionBD.conectar();
+
             String consulta = "UPDATE " + nombreTabla + " SET nombres = ?, apellidos = ?, cantidadDePersonas = ?, salon = ?, fecha = ?, horaInicio = ?, horaFin = ?, estado = ? WHERE id = ?";
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
             sentencia.setString(1, reserva.getNombres());
@@ -140,7 +141,7 @@ public class RepositoryReserva {
             sentencia.setTime(6, reserva.getHoraInicio());
             sentencia.setTime(7, reserva.getHoraFin());
             sentencia.setString(8, reserva.getEstado());
-            sentencia.setInt(9, reserva.getId());
+            sentencia.setInt(9, reservaId);
     
             int resultado = sentencia.executeUpdate();
             sentencia.close();

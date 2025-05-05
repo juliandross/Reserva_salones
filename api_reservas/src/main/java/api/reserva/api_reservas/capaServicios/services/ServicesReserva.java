@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import api.reserva.api_reservas.capaAccesoDatos.modelos.ReservaEntity;
 import api.reserva.api_reservas.capaAccesoDatos.modelos.SalonEntity;
 import api.reserva.api_reservas.capaAccesoDatos.repositorios.RepositoryReserva;
+import api.reserva.api_reservas.capaAccesoDatos.repositorios.RepositorySalon;
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
 import api.reserva.api_reservas.capaServicios.mapper.Mapper;
@@ -21,6 +23,8 @@ public class ServicesReserva {
     @Autowired
     private RepositoryReserva repositoryReserva;
 
+    @Autowired
+    private RepositorySalon repositorySalon;
     @Autowired
     private Mapper mapper;
 
@@ -84,5 +88,19 @@ public class ServicesReserva {
     public int rechazarReserva(int idReserva) {
         // Lógica para rechazar la reserva
         return repositoryReserva.rechazarReserva(idReserva);
+    }
+
+    public ReservaDTO actualizarReserva(int idReserva, ReservaDTO reservaDTO) {
+        // Lógica para actualizar la reserva
+        ReservaEntity reservaEntity = mapper.crearMapper().map(reservaDTO, ReservaEntity.class);
+        
+        // Asignar el salón a la entidad
+        SalonEntity salon = new SalonEntity();
+        salon = repositorySalon.buscarPorNumero(reservaDTO.getNumeroSalon());
+        reservaEntity.setSalon(salon);
+
+        Optional<ReservaEntity> respuesta = repositoryReserva.actualizarReserva(idReserva, reservaEntity);
+        reservaDTO = mapper.crearMapper().map(respuesta.get(), ReservaDTO.class);
+        return reservaDTO;
     }
 }

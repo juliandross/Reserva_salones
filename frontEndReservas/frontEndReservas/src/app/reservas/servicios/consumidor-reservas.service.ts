@@ -28,12 +28,12 @@ export class ConsumidorReservasService {
 
   rechazarReserva(reservaId: number): Observable<void> {
     console.log("Llamando a la API para rechazar una reserva", reservaId);
-    return this.htpp.delete<void>(`${this.apiUrl}/reserva/${reservaId}`, { headers: this.httpHeaders });
+    return this.htpp.delete<void>(`${this.apiUrl}/reserva/rechazar/${reservaId}`, { headers: this.httpHeaders });
   }
 
   aceptarReserva(reservaId: number): Observable<void> {
     console.log("Llamando a la API para aceptar una reserva", reservaId);
-    return this.htpp.put<void>(`${this.apiUrl}/reserva/${reservaId}`, { headers: this.httpHeaders });
+    return this.htpp.put<void>(`${this.apiUrl}/reserva/aceptar/${reservaId}`, { headers: this.httpHeaders });
   }
 
 }
