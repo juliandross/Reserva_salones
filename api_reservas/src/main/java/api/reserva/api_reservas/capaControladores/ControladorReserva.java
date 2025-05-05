@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET})
+@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 public class ControladorReserva {
     
     @Autowired
@@ -54,7 +54,7 @@ public class ControladorReserva {
             return ResponseEntity.ok(new RespuestaReservaDTO(true, "Reserva aceptada correctamente."));
         } 
         if(reservaAceptada==1){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new RespuestaReservaDTO(false, "La reserva ya fue aceptada."));
         }
         else {
@@ -71,7 +71,7 @@ public class ControladorReserva {
             return ResponseEntity.ok(new RespuestaReservaDTO(true, "Reserva rechazada correctamente."));
         } 
         if(reservaRechazada==1){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new RespuestaReservaDTO(false, "La reserva ya fue rechazada."));
         }
         else {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reserva } from '../modelos/reserva';
+import { RespuestaSimple } from '../modelos/respuestaSimple';
 @Injectable({
   providedIn: 'root'
 })
@@ -26,14 +27,13 @@ export class ConsumidorReservasService {
     return objReserva;
   }
 
-  rechazarReserva(reservaId: number): Observable<void> {
+  rechazarReserva(reservaId: number): Observable<RespuestaSimple> {
     console.log("Llamando a la API para rechazar una reserva", reservaId);
-    return this.htpp.delete<void>(`${this.apiUrl}/reserva/rechazar/${reservaId}`, { headers: this.httpHeaders });
+    return this.htpp.post<RespuestaSimple>(`${this.apiUrl}/reserva/rechazar/${reservaId}`, { headers: this.httpHeaders });
   }
 
-  aceptarReserva(reservaId: number): Observable<void> {
-    console.log("Llamando a la API para aceptar una reserva", reservaId);
-    return this.htpp.put<void>(`${this.apiUrl}/reserva/aceptar/${reservaId}`, { headers: this.httpHeaders });
+  aceptarReserva(reservaId: number): Observable<RespuestaSimple> {
+    return this.htpp.post<RespuestaSimple>(`${this.apiUrl}/reserva/aceptar/${reservaId}`, { headers: this.httpHeaders });
   }
 
 }
