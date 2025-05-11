@@ -5,6 +5,7 @@ import { Reserva } from '../modelos/reserva';
 import { RespuestaSimple } from '../modelos/respuestaSimple';
 import { RespuestaCreacionReserva } from '../modelos/respuestaCreacionReserva';
 import { ReservaCreacion } from '../modelos/reservaCreacion';
+import { ReservaEdicion } from '../modelos/reservaEdicion';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +24,17 @@ export class ConsumidorReservasService {
     }
     // Agregar ':00' al final si solo tiene 'HH:mm'
     return `${time}:00`;
+  }
+  getReservaById(id: string): Observable<any> {
+    return this.htpp.get<any>(`${this.apiUrl}/reserva/${id}`, { headers: this.httpHeaders }).pipe(
+      tap((reserva) => {
+        console.log('Reserva obtenida:', reserva);
+      }),
+      catchError((error) => {
+        console.error('Error al obtener la reserva:', error);
+        return throwError(() => new Error('Error al obtener la reserva'));
+      })
+    );
   }
   getSalonesDisponibles(fecha: string, horaInicio: string, horaFin: string): Observable<{ id: number; numeroDeSalon: number }[]> {
     console.log("Llamando a la API para obtener salones disponibles");
@@ -92,5 +104,17 @@ export class ConsumidorReservasService {
   getSalones(): Observable<{ id: number; numeroDeSalon: number }[]> {
     console.log("Llamando a la API para obtener los salones");
     return this.htpp.get<{ id: number; numeroDeSalon: number }[]>(`${this.apiUrl}/salones`, { headers: this.httpHeaders });
+  }
+
+  editarReserva(reserva: any): Observable<any> {
+    return this.htpp.put<any>(`${this.apiUrl}/reserva/${reserva.id}`, reserva, { headers: this.httpHeaders }).pipe(
+      tap((response) => {
+        console.log('Reserva actualizada:', response);
+      }),
+      catchError((error) => {
+        console.error('Error al actualizar la reserva:', error);
+        return throwError(() => new Error('Error al actualizar la reserva'));
+      })
+    );
   }
 }

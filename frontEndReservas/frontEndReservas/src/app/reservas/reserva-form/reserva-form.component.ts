@@ -38,20 +38,20 @@ export class ReservaFormComponent {
     );
   }
   onDateOrTimeChange() {
-  const { fecha, horaInicio, horaFin } = this.reserva;
+    const { fecha, horaInicio, horaFin } = this.reserva;
 
-  if (fecha && horaInicio && horaFin) {
-    this.consumidorReservasService.getSalonesDisponibles(fecha, horaInicio, horaFin).subscribe(
-      (salones) => {
-        this.salones = salones;
-        console.log("Salones disponibles actualizados:", this.salones);
-      },
-      (error) => {
-        console.error("Error al obtener los salones disponibles:", error);
-      }
-    );
+    if (fecha && horaInicio && horaFin) {
+      this.consumidorReservasService.getSalonesDisponibles(fecha, horaInicio, horaFin).subscribe(
+        (salones) => {
+          this.salones = salones;
+          console.log("Salones disponibles actualizados:", this.salones);
+        },
+        (error) => {
+          console.error("Error al obtener los salones disponibles:", error);
+        }
+      );
+    }
   }
-}
   crearReserva() {
 
   // Ajustar el formato de horaInicio y horaFin a 'HH:mm:ss'

@@ -141,6 +141,6 @@ public class ControladorReserva {
         }
 
         return ResponseEntity.ok(salonesDisponibles);
-}
+    }
     
 }
