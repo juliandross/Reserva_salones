@@ -73,6 +73,7 @@
                 id="horaInicio"
                 name="horaInicio"
                 class="form-control"
+                [(ngModel)]="reserva.horaInicio"
                 (change)="onDateOrTimeChange()"
                 required
             />
@@ -89,6 +90,7 @@
                 id="horaFin"
                 name="horaFin"
                 class="form-control"
+                [(ngModel)]="reserva.horaFin"
                 (change)="onDateOrTimeChange()"
                 required
             />

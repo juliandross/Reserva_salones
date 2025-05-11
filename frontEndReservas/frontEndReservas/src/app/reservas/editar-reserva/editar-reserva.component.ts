@@ -22,7 +22,6 @@ export class EditarReservaComponent implements OnInit {
     private router: Router,
     private consumidorReservasService: ConsumidorReservasService
   ) {
-
   }
 
   ngOnInit(): void {
