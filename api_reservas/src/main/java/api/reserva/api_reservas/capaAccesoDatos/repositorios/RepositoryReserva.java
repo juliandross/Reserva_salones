@@ -1,6 +1,6 @@
 package api.reserva.api_reservas.capaAccesoDatos.repositorios;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ public class RepositoryReserva {
     //Crear reserva
     public ReservaEntity crearReserva(ReservaEntity reserva) {
         ReservaEntity reservaEnCreacion = null;
-        
+        System.out.println("Creando reserva en fecha (repositorio):" + reserva.getFecha());
         // Validar que el salón no sea null y exista
         if (reserva.getSalon() == null || reserva.getSalon().getId() == null) {
             throw new IllegalArgumentException("El salón es obligatorio para crear una reserva.");
@@ -50,7 +50,7 @@ public class RepositoryReserva {
             sentencia.setString(2, reserva.getApellidos());
             sentencia.setInt(3, reserva.getCantidadDePersonas());
             sentencia.setInt(4, idSalon); // Ya validado que no es null
-            sentencia.setDate(5, new java.sql.Date(reserva.getFecha().getTime()));
+            sentencia.setDate(5, java.sql.Date.valueOf(reserva.getFecha()));
             sentencia.setTime(6, reserva.getHoraInicio());
             sentencia.setTime(7, reserva.getHoraFin());
             sentencia.setString(8, reserva.getEstado());
@@ -108,7 +108,7 @@ public class RepositoryReserva {
                 SalonEntity salon = repositorySalon.buscarSalonPorId(idSalon);
                 reserva.setSalon(salon);
 
-                reserva.setFecha(resultado.getDate("fecha"));
+                reserva.setFecha(resultado.getDate("fecha").toLocalDate());
                 reserva.setHoraInicio(resultado.getTime("horaInicio"));
                 reserva.setHoraFin(resultado.getTime("horaFin"));
                 reserva.setEstado(resultado.getString("estado"));
@@ -137,7 +137,7 @@ public class RepositoryReserva {
             sentencia.setString(2, reserva.getApellidos());
             sentencia.setInt(3, reserva.getCantidadDePersonas());
             sentencia.setInt(4, reserva.getSalon().getId());
-            sentencia.setDate(5, new java.sql.Date(reserva.getFecha().getTime()));
+            sentencia.setDate(5, java.sql.Date.valueOf(reserva.getFecha()));
             sentencia.setTime(6, reserva.getHoraInicio());
             sentencia.setTime(7, reserva.getHoraFin());
             sentencia.setString(8, reserva.getEstado());
@@ -214,7 +214,7 @@ public class RepositoryReserva {
                 }
                 reserva.setSalon(salon);
     
-                reserva.setFecha(resultado.getDate("fecha"));
+                reserva.setFecha(resultado.getDate("fecha").toLocalDate());
                 reserva.setHoraInicio(resultado.getTime("horaInicio"));
                 reserva.setHoraFin(resultado.getTime("horaFin"));
                 reserva.setEstado(resultado.getString("estado"));
@@ -254,7 +254,7 @@ public class RepositoryReserva {
                 System.out.println("No se encontró la reserva con ID: " + idReserva);
                 return -1; // Reserva no encontrada
             }
-            String consulta = "UPDATE " + nombreTabla + " SET estado = 'Aceptada' WHERE id = "+ idReserva;
+            String consulta = "UPDATE " + nombreTabla + " SET estado = 'ACEPTADA' WHERE id = "+ idReserva;
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
             resultado = sentencia.executeUpdate();
             sentencia.close();
@@ -286,7 +286,7 @@ public class RepositoryReserva {
                 System.out.println("No se encontró la reserva con ID: " + idReserva);
                 return -1; // Reserva no encontrada
             }
-            String consulta = "UPDATE " + nombreTabla + " SET estado = 'Rechazada' WHERE id = "+ idReserva;
+            String consulta = "UPDATE " + nombreTabla + " SET estado = 'RECHAZADA' WHERE id = "+ idReserva;
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
             resultado = sentencia.executeUpdate();
             sentencia.close();
@@ -299,7 +299,7 @@ public class RepositoryReserva {
         return 0;
     }
     //Verificar disponibilidad de salon
-    public boolean verificarDisponibilidadSalon(Date fecha, Time horaInicio, Time horaFin) {
+    public boolean verificarDisponibilidadSalon(LocalDate fecha, Time horaInicio, Time horaFin) {
         boolean disponible = true;
 
         try {
@@ -311,7 +311,7 @@ public class RepositoryReserva {
                             "AND ((? < horaFin AND ? > horaInicio))";
 
             PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
-            sentencia.setDate(1, fecha);
+            sentencia.setDate(1, java.sql.Date.valueOf(fecha));
             sentencia.setTime(2, horaInicio);
             sentencia.setTime(3, horaFin);
 

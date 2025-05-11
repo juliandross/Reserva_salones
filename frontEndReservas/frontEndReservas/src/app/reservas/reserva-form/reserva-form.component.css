@@ -57,3 +57,8 @@
   .btn-primary:hover:not(:disabled) {
     background-color: #333399; /* Slightly lighter blue */
   }
+  /* Efecto hover para los botones */
+  .btn:hover {
+      transform: scale(1.1); 
+      transition: transform 0.2s ease-in-out;
+  }

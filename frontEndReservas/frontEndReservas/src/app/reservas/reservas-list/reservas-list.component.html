@@ -9,7 +9,7 @@
             No hay registros en la base de datos
         </div>
 
-        <table *ngIf="listaReservas.length > 0" class="table table-bordered table-hover">
+        <table *ngIf="listaReservas.length > 0" class="table table-bordered table-hover" [@listAnimation]="animarLista ? 'active' : 'inactive'" >
             <thead style="background-color: #223a7b; color: white;">
                 <tr>
                     <th>Id reserva</th>
@@ -32,7 +32,11 @@
                     <td>{{reserva.fecha | date:'dd/MM/yyyy'}}</td>
                     <td>{{reserva.horaInicio}}</td>
                     <td>{{reserva.horaFin}}</td>
-                    <td>{{reserva.estado}}</td>
+                    <td [ngClass]="{'text-success': reserva.estado === 'ACEPTADA', 
+                        'text-warning': reserva.estado === 'PENDIENTE',
+                        'text-danger': reserva.estado === 'RECHAZADA'}">
+                        {{reserva.estado}}
+                    </td>
                     <td class="text-center">
                         <button (click)="aceptarReserva(reserva.id)" class="btn btn-success btn-sm me-1">
                             <i class="fas fa-check"></i>
@@ -43,7 +47,7 @@
                         <button (click)="editarReserva(reserva)" class="btn btn-warning btn-sm me-1">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button (click)="verReserva(reserva)" class="btn btn-info btn-sm me-1">
+                        <button (click)="verReserva(reserva)" class="btn btn-info btn-sm me-1" data-bs-toggle="modal" data-bs-target="#verReservaModal">
                             <i class="fas fa-eye"></i>
                         </button>
                     </td>
@@ -53,5 +57,31 @@
         <button class="btn btn-rounded" style="background-color: #4caf50; color: white" type="button" [routerLink]="['add-reserva']">  
             Crear Reserva
         </button>
+    </div>
+    
+</div>
+
+<!-- Modal para visualizar reserva -->
+<div class="modal fade" id="verReservaModal" tabindex="-1" aria-labelledby="verReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verReservaModalLabel">Detalles de la Reserva</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Id Reserva:</strong> {{reservaSeleccionada?.id}}</p>
+                <p><strong>Usuario:</strong> {{reservaSeleccionada?.nombres}} {{reservaSeleccionada?.apellidos}}</p>
+                <p><strong>Cantidad de Personas:</strong> {{reservaSeleccionada?.cantidadDePersonas}}</p>
+                <p><strong>Salón:</strong> {{reservaSeleccionada?.numeroSalon}}</p>
+                <p><strong>Fecha de Uso:</strong> {{reservaSeleccionada?.fecha | date:'dd/MM/yyyy'}}</p>
+                <p><strong>Hora Inicio:</strong> {{reservaSeleccionada?.horaInicio}}</p>
+                <p><strong>Hora Fin:</strong> {{reservaSeleccionada?.horaFin}}</p>
+                <p><strong>Estado:</strong> {{reservaSeleccionada?.estado}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
 </div>

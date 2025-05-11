@@ -7,21 +7,39 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ConsumidorReservasService } from '../servicios/consumidor-reservas.service';
 import Swal from 'sweetalert2';
 import { RespuestaCreacionReserva } from '../modelos/respuestaCreacionReserva';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-reserva-form',
   templateUrl: './reserva-form.component.html',
   styleUrls: ['./reserva-form.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, SweetAlert2Module, HttpClientModule]
+  imports: [FormsModule, CommonModule, RouterLink,SweetAlert2Module, HttpClientModule]
 })
 export class ReservaFormComponent {
   reserva: ReservaCreacion = new ReservaCreacion();
+  salones: { id: number; numeroDeSalon: number }[] = []; // Lista de salones
+
 
   constructor(private consumidorReservasService: ConsumidorReservasService){}
-  
+
+  ngOnInit() {
+    this.obtenerSalones();
+  }
+    obtenerSalones() {
+    this.consumidorReservasService.getSalones().subscribe(
+      (salones) => {
+        this.salones = salones;
+        console.log("Salones obtenidos:", this.salones);
+      },
+      (error) => {
+        console.error("Error al obtener los salones:", error);
+      }
+    );
+  }
+
   crearReserva() {
-      // Ajustar el formato de horaInicio y horaFin a 'HH:mm:ss'
+
+  // Ajustar el formato de horaInicio y horaFin a 'HH:mm:ss'
   this.reserva.horaInicio = this.reserva.horaInicio + ':00';
   this.reserva.horaFin = this.reserva.horaFin + ':00';
 
@@ -35,6 +53,9 @@ export class ReservaFormComponent {
             text: response.mensaje,
             icon: 'success',
           });
+          // Restablecer los valores de horaInicio y horaFin
+          this.reserva.horaInicio = '';
+          this.reserva.horaFin = '';
         } else {
           Swal.fire({
             title: 'Error al crear reserva',
@@ -44,10 +65,10 @@ export class ReservaFormComponent {
         }
       },
       (error) => {
-        console.error('Error al crear reserva:', error);
+        console.error('Error al crear reserva:', error.mensaje);
         Swal.fire({
           title: 'Error',
-          text: 'Ocurrió un error al crear la reserva.',
+          text: "Reserva no disponible en el horario seleccionado",
           icon: 'error',
         });
       }

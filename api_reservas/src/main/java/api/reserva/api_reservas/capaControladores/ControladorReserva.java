@@ -95,5 +95,16 @@ public class ControladorReserva {
                     .body(new RespuestaEditarReservaDTO(false, "No se encontró la reserva con el ID especificado.", reserva));
         }
     }
+
+    @GetMapping("/reserva/{id}")
+    public ResponseEntity<ReservaDTO> obtenerReservaPorId(@PathVariable int id) {
+        System.out.println("Entrando al controlador de reservas para obtener una reserva con ID: " + id);
+        ReservaDTO reserva = servicesReserva.obtenerReservaPorId(id);
+        if (reserva != null) {
+            return ResponseEntity.ok(reserva);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
     
 }

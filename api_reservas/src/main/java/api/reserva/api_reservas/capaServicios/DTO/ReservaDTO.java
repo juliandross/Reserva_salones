@@ -1,7 +1,7 @@
 package api.reserva.api_reservas.capaServicios.DTO;
 
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class ReservaDTO {
     private String apellidos;
     private int cantidadDePersonas;
     private int numeroSalon;
-    private Date fecha;
+    private LocalDate fecha;
     private Time horaInicio;
     private Time horaFin;
     private String estado;

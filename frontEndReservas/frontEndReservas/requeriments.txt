@@ -1,0 +1,2 @@
+@angular/animations@19.2.9
+@types/bootstrap

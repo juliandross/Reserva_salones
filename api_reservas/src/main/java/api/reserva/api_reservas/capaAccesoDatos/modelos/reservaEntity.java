@@ -1,7 +1,7 @@
 package api.reserva.api_reservas.capaAccesoDatos.modelos;
 
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class ReservaEntity {
     String apellidos;
     Integer cantidadDePersonas;
     SalonEntity salon;
-    Date fecha;
+    LocalDate fecha;
     Time horaInicio;
     Time horaFin;
     String estado;

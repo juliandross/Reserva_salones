@@ -126,4 +126,14 @@ public class ServicesReserva {
         reservaDTO = mapper.crearMapper().map(respuesta.get(), ReservaDTO.class);
         return reservaDTO;
     }
+
+    public ReservaDTO obtenerReservaPorId(int idReserva) {
+        // Lógica para buscar una reserva por ID
+        Optional<ReservaEntity> reservaEntity = repositoryReserva.buscarReservaPorId(idReserva);
+        if (reservaEntity.isPresent()) {
+            return mapper.crearMapper().map(reservaEntity.get(), ReservaDTO.class);
+        } else {
+            return null; // O lanzar una excepción si no se encuentra la reserva
+        }
+    }
 }

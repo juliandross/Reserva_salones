@@ -4,54 +4,92 @@
         <!-- Nombres -->
         <div class="form-group">
             <label for="nombres">Nombres:</label>
-            <input type="text" id="nombres" name="nombres" class="form-control" [(ngModel)]="reserva.nombres"
-                required />
+            <input type="text" id="nombres" name="nombres" class="form-control" [(ngModel)]="reserva.nombres" required />
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['nombres']?.valid" class="text-danger">
+                El campo nombres es obligatorio.
+            </div>
         </div>
 
         <!-- Apellidos -->
         <div class="form-group">
             <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" class="form-control" [(ngModel)]="reserva.apellidos"
-                required />
+            <input type="text" id="apellidos" name="apellidos" class="form-control" [(ngModel)]="reserva.apellidos" required />
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['apellidos']?.valid" class="text-danger">
+                El campo apellidos es obligatorio.
+            </div>
         </div>
 
         <!-- Cantidad de Personas -->
         <div class="form-group">
             <label for="cantidadDePersonas">Cantidad de Personas:</label>
-            <input type="number" id="cantidadDePersonas" name="cantidadDePersonas" class="form-control"
-                [(ngModel)]="reserva.cantidadDePersonas" required />
+            <input type="number" id="cantidadDePersonas" name="cantidadDePersonas" class="form-control" [(ngModel)]="reserva.cantidadDePersonas" required />
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['cantidadDePersonas']?.valid" class="text-danger">
+                El campo cantidad de personas es obligatorio.
+            </div>
         </div>
+
 
         <!-- Número de Salón -->
         <div class="form-group">
             <label for="numeroSalon">Número de Salón:</label>
-            <input type="number" id="numeroSalon" name="numeroSalon" class="form-control"
-                [(ngModel)]="reserva.numeroSalon" required />
+            <select
+                id="numeroSalon"
+                name="numeroSalon"
+                class="form-control"
+                [(ngModel)]="reserva.numeroSalon"
+                required
+            >
+                <option value="" disabled selected>Seleccione un salón</option>
+                <option *ngFor="let salon of salones" [value]="salon.numeroDeSalon">
+                {{ salon.numeroDeSalon }}
+                </option>
+            </select>
+            <div
+                *ngIf="reservaForm.submitted && !reservaForm.controls['numeroSalon']?.valid"
+                class="text-danger"
+            >
+                El campo número de salón es obligatorio.
+            </div>
         </div>
 
         <!-- Fecha -->
         <div class="form-group">
             <label for="fecha">Fecha:</label>
             <input type="date" id="fecha" name="fecha" class="form-control" [(ngModel)]="reserva.fecha" required />
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['fecha']?.valid" class="text-danger">
+                El campo fecha es obligatorio.
+            </div>
         </div>
 
         <!-- Hora de Inicio -->
         <div class="form-group">
             <label for="horaInicio">Hora de Inicio:</label>
-            <input type="time" id="horaInicio" name="horaInicio" class="form-control" [(ngModel)]="reserva.horaInicio"
-                required />
+            <input type="time" id="horaInicio" name="horaInicio" class="form-control" [(ngModel)]="reserva.horaInicio" required />
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['horaInicio']?.valid" class="text-danger">
+                El campo hora de inicio es obligatorio.
+            </div>
         </div>
 
         <!-- Hora de Fin -->
         <div class="form-group">
             <label for="horaFin">Hora de Fin:</label>
-            <input type="time" id="horaFin" name="horaFin" class="form-control" [(ngModel)]="reserva.horaFin"
-                required />
+            <input type="time" id="horaFin" name="horaFin" class="form-control" [(ngModel)]="reserva.horaFin" required />
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['horaFin']?.valid" class="text-danger">
+                El campo hora de fin es obligatorio.
+            </div>
         </div>
 
-        <!-- Botón de Enviar -->
-        <button type="submit" class="btn" style="background-color: #4caf50; color: white;">
-            Guardar Reserva
-        </button>
+        <!-- Botones -->
+        <div class="form-group d-flex justify-content-between">
+            <!-- Botón de Cancelar -->
+            <button type="button" class="btn btn-danger" [routerLink]="['/']">
+                Cancelar
+            </button>
+
+            <!-- Botón de Enviar -->
+            <button type="submit" class="btn btn-success" [disabled]="!reservaForm.valid">
+                Guardar Reserva
+            </button>
+        </div>
     </form>
 </div>

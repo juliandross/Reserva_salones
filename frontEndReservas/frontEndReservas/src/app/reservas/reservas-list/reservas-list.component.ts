@@ -8,33 +8,52 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
 import { RespuestaSimple } from '../modelos/respuestaSimple';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
 @Component({
   selector: 'app-reservas-list',
   imports: [CommonModule, RouterLink, HttpClientModule],
   templateUrl: './reservas-list.component.html',
-  styleUrl: './reservas-list.component.css'
+  styleUrl: './reservas-list.component.css',
+  animations: [
+    trigger('listAnimation', [
+      transition('inactive => active', [
+        query('tr', [
+          style({ opacity: 0, transform: 'translateY(-20px)' }),
+          stagger(100, [
+            animate('0.5s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ],
 })
 export class ReservasListComponent {
   constructor(private consumidorReservasService: ConsumidorReservasService) { }
   listaReservas: Reserva[] = []; // Lista de reservas
+  reservaSeleccionada: Reserva | null = null; // Reserva seleccionada para el modal
+  animarLista: boolean = true;
+
   ngOnInit(){
     this.consumidorReservasService.getReservas().subscribe
     (
       listaReservas => {
         this.listaReservas = listaReservas; // Asignar la lista de reservas a la variable local
+        setTimeout(() => {
+          this.animarLista = true; // Activar la animación después de cargar los datos
+        }, 0);
       }
     )
     console.log("Lista de reservas obtenida:", this.listaReservas); // Mostrar la lista de reservas en la consola
+  }
+
+  verReserva(reserva: Reserva) {
+    this.reservaSeleccionada = reserva; // Asigna la reserva seleccionada
+    console.log("Reserva seleccionada:", this.reservaSeleccionada);
   }
   
   editarReserva(reserva: Reserva) {
     // Lógica para editar la reserva
     console.log("Editando reserva:", reserva); // Mostrar la reserva a editar en la consola
-  }
-
-  verReserva(reserva: Reserva) {
-    // Lógica para eliminar la reserva
-    console.log("Eliminando reserva:", reserva); // Mostrar la reserva a eliminar en la consola
   }
 
   aceptarReserva(reservaId: number) {

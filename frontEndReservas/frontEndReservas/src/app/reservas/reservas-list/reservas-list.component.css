@@ -1,0 +1,32 @@
+/* Efecto hover para los botones */
+.btn:hover {
+    transform: scale(1.1); 
+    transition: transform 0.2s ease-in-out;
+}
+.text-success {
+    color: green;
+    font-weight: bold;
+}
+
+.text-warning {
+    color: orange;
+    font-weight: bold;
+}
+
+.text-danger {
+    color: red;
+    font-weight: bold;
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #223a7b;
+  color: white;
+}
+
+.modal-footer {
+  justify-content: center;
+}
