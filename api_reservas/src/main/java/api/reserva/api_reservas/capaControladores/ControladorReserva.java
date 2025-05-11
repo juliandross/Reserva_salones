@@ -1,6 +1,8 @@
 package api.reserva.api_reservas.capaControladores;
 
 import java.security.Provider.Service;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import api.reserva.api_reservas.capaServicios.DTO.ConsultarFranjaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.RespuestaConsultarFranjaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaCrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaEditarReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.SalonDTO;
 import api.reserva.api_reservas.capaServicios.services.ServicesReserva;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -106,5 +111,36 @@ public class ControladorReserva {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @GetMapping("/reserva/consultarFranja")
+    public ResponseEntity<RespuestaConsultarFranjaDTO> verificarDisponibilidadSalon(@RequestBody ConsultarFranjaDTO consultarFranjaDTO) {
+        System.out.println("Entrando al controlador de reservas para consultar una franja horaria");
+        RespuestaConsultarFranjaDTO respuesta = servicesReserva.verificarDisponibilidadSalon(
+            consultarFranjaDTO.getFecha(),
+            consultarFranjaDTO.getHoraInicio(),
+            consultarFranjaDTO.getHoraFin());
+        if(respuesta.isExito()){
+            return ResponseEntity.ok(respuesta);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+        }
+    }
+
+    @GetMapping("/salones/disponibles")
+    public ResponseEntity<List<SalonDTO>> obtenerSalonesDisponibles(@RequestBody ConsultarFranjaDTO consultarFranjaDTO) {
+        System.out.println("Entrando al controlador para obtener salones disponibles en una franja horaria");
+        List<SalonDTO> salonesDisponibles = servicesReserva.obtenerSalonesDisponibles(
+            consultarFranjaDTO.getFecha(),
+            consultarFranjaDTO.getHoraInicio(),
+            consultarFranjaDTO.getHoraFin()
+        );
+
+        if (salonesDisponibles.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(salonesDisponibles);
+        }
+
+        return ResponseEntity.ok(salonesDisponibles);
+}
     
 }

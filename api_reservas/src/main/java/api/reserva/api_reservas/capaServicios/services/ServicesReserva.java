@@ -1,5 +1,7 @@
 package api.reserva.api_reservas.capaServicios.services;
 
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,9 @@ import api.reserva.api_reservas.capaAccesoDatos.repositorios.RepositoryReserva;
 import api.reserva.api_reservas.capaAccesoDatos.repositorios.RepositorySalon;
 import api.reserva.api_reservas.capaServicios.DTO.CrearReservaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.ReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.RespuestaConsultarFranjaDTO;
 import api.reserva.api_reservas.capaServicios.DTO.RespuestaCrearReservaDTO;
+import api.reserva.api_reservas.capaServicios.DTO.SalonDTO;
 import api.reserva.api_reservas.capaServicios.mapper.Mapper;
 
 @Service
@@ -135,5 +139,28 @@ public class ServicesReserva {
         } else {
             return null; // O lanzar una excepción si no se encuentra la reserva
         }
+    }
+
+    public RespuestaConsultarFranjaDTO verificarDisponibilidadSalon(LocalDate fecha, Time horaInicio, Time horaFin){
+        // Lógica para verificar la disponibilidad del salón
+        RespuestaConsultarFranjaDTO respuesta = new RespuestaConsultarFranjaDTO();
+        boolean disponible = repositoryReserva.verificarDisponibilidadSalon(fecha, horaInicio, horaFin);
+        if (disponible) {
+            respuesta.setMensaje("El salón está disponible en la fecha y hora seleccionadas.");
+            respuesta.setExito(true);
+        } else {
+            respuesta.setMensaje("El salón no está disponible en la fecha y hora seleccionadas.");
+            respuesta.setExito(false);
+        }
+        return respuesta;
+    }
+    
+    public List<SalonDTO> obtenerSalonesDisponibles(LocalDate fecha, Time horaInicio, Time horaFin) {
+        List<SalonEntity> salonesDisponibles = repositoryReserva.obtenerSalonesDisponibles(fecha, horaInicio, horaFin);
+
+        // Convertir la lista de entidades a DTOs
+        return salonesDisponibles.stream()
+                .map(salon -> mapper.crearMapper().map(salon, SalonDTO.class))
+                .collect(Collectors.toList());
     }
 }

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -332,5 +333,45 @@ public class RepositoryReserva {
         }
 
         return disponible;
+    }
+
+    public List<SalonEntity> obtenerSalonesDisponibles(LocalDate fecha, Time horaInicio, Time horaFin) {
+        List<SalonEntity> salonesDisponibles = new ArrayList<>();
+
+        try {
+            conexionBD.conectar();
+
+            // Consulta SQL para obtener los salones que no tienen reservas en la franja horaria
+            String consulta = "SELECT * FROM salon s " +
+                            "WHERE NOT EXISTS (" +
+                            "    SELECT 1 FROM reserva r " +
+                            "    WHERE r.salon = s.id " +
+                            "    AND r.fecha = ? " +
+                            "    AND (? < r.horaFin AND ? > r.horaInicio)" +
+                            ")";
+            PreparedStatement sentencia = conexionBD.getConnection().prepareStatement(consulta);
+            sentencia.setDate(1, java.sql.Date.valueOf(fecha));
+            sentencia.setTime(2, horaInicio);
+            sentencia.setTime(3, horaFin);
+
+            ResultSet resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                SalonEntity salon = new SalonEntity();
+                salon.setId(resultado.getInt("id"));
+                salon.setNumeroDeSalon(resultado.getInt("numeroDeSalon"));
+                salonesDisponibles.add(salon);
+            }
+
+            resultado.close();
+            sentencia.close();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener los salones disponibles: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            conexionBD.desconectar();
+        }
+
+        return salonesDisponibles;
     }
 }
