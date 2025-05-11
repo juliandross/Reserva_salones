@@ -21,7 +21,9 @@ export class EditarReservaComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private consumidorReservasService: ConsumidorReservasService
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
     // Obtener el ID de la reserva desde la URL
@@ -47,6 +49,7 @@ export class EditarReservaComponent implements OnInit {
       );
     }
   }
+  
   cargarReserva(id: string): void {
     this.consumidorReservasService.getReservaById(id).subscribe(
       (reserva) => {
@@ -71,14 +74,49 @@ export class EditarReservaComponent implements OnInit {
   }
 
   editarReserva(): void {
+    // Ajustar el formato de horaInicio y horaFin a 'HH:mm:ss'
+    this.reserva.horaInicio = this.reserva.horaInicio + ':00';
+    this.reserva.horaFin = this.reserva.horaFin + ':00';
+
+      
+    // Validar que la fecha sea igual o mayor al día actual
+    const fechaActual = new Date();
+    const fechaSeleccionada = new Date(this.reserva.fecha);
+
+    if (fechaSeleccionada.getTime() < fechaActual.setHours(0, 0, 0, 0)) {
+      Swal.fire('Error', 'La fecha debe ser igual o mayor al día actual.', 'error');
+        this.reserva.horaInicio = ''; // Limpiar el campo de hora de inicio
+        this.reserva.horaFin = ''; // Limpiar el campo de hora de inicio
+      return;
+    }
+    // Validar que la hora de inicio no sea mayor o igual que la hora de fin
+    if (this.reserva.horaInicio >= this.reserva.horaFin){
+      Swal.fire('Error', 'La hora de inicio debe ser menor que la hora de fin.', 'error');
+            this.reserva.horaInicio = ''; // Limpiar el campo de hora de inicio
+        this.reserva.horaFin = ''; // Limpiar el campo de hora de inicio
+      return;
+    }
+
+    if(!this.reserva.horaInicio || !this.reserva.horaFin) {
+      Swal.fire('Error', 'La hora de inicio y fin son obligatorias.', 'error');
+      return;
+    }
+
+    console.log('Reserva enviada:', this.reserva);
     this.consumidorReservasService.editarReserva(this.reserva).subscribe(
       () => {
+        // Restablecer los valores de horaInicio y horaFin
+        this.reserva.horaInicio = '';
+        this.reserva.horaFin = '';
         Swal.fire('Éxito', 'La reserva ha sido actualizada.', 'success');
         this.router.navigate(['/reservas']);
       },
       (error) => {
+        // Restablecer los valores de horaInicio y horaFin
+        this.reserva.horaInicio = '';
+        this.reserva.horaFin = '';
         console.error('Error al actualizar la reserva:', error);
-        Swal.fire('Error', 'No se pudo actualizar la reserva.', 'error');
+        Swal.fire('Error', 'La reserva no esta disponible en el horario seleccionado.', 'error');
       }
     );
   }

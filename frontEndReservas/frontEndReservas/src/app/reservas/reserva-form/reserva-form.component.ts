@@ -54,24 +54,43 @@ export class ReservaFormComponent {
   }
   crearReserva() {
 
-  // Ajustar el formato de horaInicio y horaFin a 'HH:mm:ss'
-  this.reserva.horaInicio = this.reserva.horaInicio + ':00';
-  this.reserva.horaFin = this.reserva.horaFin + ':00';
+    // Ajustar el formato de horaInicio y horaFin a 'HH:mm:ss'
+    this.reserva.horaInicio = this.reserva.horaInicio + ':00';
+    this.reserva.horaFin = this.reserva.horaFin + ':00';
+
+    // Validar que la fecha sea igual o mayor al día actual
+    const fechaActual = new Date();
+    const fechaSeleccionada = new Date(this.reserva.fecha);
+
+    if (fechaSeleccionada.getTime() < fechaActual.setHours(0, 0, 0, 0)) {
+      Swal.fire('Error', 'La fecha debe ser igual o mayor al día actual.', 'error');
+      this.reserva.horaInicio = ''; // Limpiar el campo de hora de inicio
+      this.reserva.horaFin = ''; // Limpiar el campo de hora de inicio
+      return;
+    }
+    // Validar que la hora de inicio no sea mayor o igual que la hora de fin
+    if (this.reserva.horaInicio >= this.reserva.horaFin){
+      Swal.fire('Error', 'La hora de inicio debe ser menor que la hora de fin.', 'error');
+      this.reserva.horaInicio = ''; // Limpiar el campo de hora de inicio
+      this.reserva.horaFin = ''; // Limpiar el campo de hora de inicio
+      return;
+    }
 
     console.log('Reserva enviada:', this.reserva);
     this.consumidorReservasService.createReserva(this.reserva).subscribe(
       (response: RespuestaCreacionReserva) => {
         console.log('Respuesta del backend:', response);
+          // Restablecer los valores de horaInicio y horaFin
+          this.reserva.horaInicio = '';
+          this.reserva.horaFin = '';
         if (response.exito) {
           Swal.fire({
             title: 'Reserva Creada',
             text: response.mensaje,
             icon: 'success',
           });
-          // Restablecer los valores de horaInicio y horaFin
-          this.reserva.horaInicio = '';
-          this.reserva.horaFin = '';
         } else {
+          
           Swal.fire({
             title: 'Error al crear reserva',
             text: response.mensaje,

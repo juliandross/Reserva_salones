@@ -2,6 +2,7 @@ package api.reserva.api_reservas.capaServicios.services;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -121,6 +122,22 @@ public class ServicesReserva {
         // Lógica para actualizar la reserva
         ReservaEntity reservaEntity = mapper.crearMapper().map(reservaDTO, ReservaEntity.class);
         
+        ReservaEntity reservaExistente = repositoryReserva.buscarReservaPorId(idReserva).get();
+
+        boolean disponible = false;
+
+        if (esMismaFranjaOHoraria(reservaEntity, reservaExistente)) {
+			disponible = true;
+			System.out.println("Reserva sin cambios, no se verifica disponibilidad.");
+		} else {
+			disponible = verificarDisponibilidadSalon(
+                reservaEntity.getFecha(),
+                reservaEntity.getHoraInicio(),
+                reservaEntity.getHoraFin()
+            ).isExito();
+			System.out.println("Reserva con cambios, se verifica disponibilidad.");
+		}
+
         // Asignar el salón a la entidad
         SalonEntity salon = new SalonEntity();
         salon = repositorySalon.buscarPorNumero(reservaDTO.getNumeroSalon());
@@ -162,5 +179,18 @@ public class ServicesReserva {
         return salonesDisponibles.stream()
                 .map(salon -> mapper.crearMapper().map(salon, SalonDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    public boolean esMismaFranjaOHoraria(ReservaEntity nueva, ReservaEntity original) {
+        if (!nueva.getFecha().equals(original.getFecha())) {
+            return false;
+        }
+
+        LocalTime nuevaInicio = nueva.getHoraInicio().toLocalTime();
+        LocalTime nuevaFin = nueva.getHoraFin().toLocalTime();
+        LocalTime originalInicio = original.getHoraInicio().toLocalTime();
+        LocalTime originalFin = original.getHoraFin().toLocalTime();
+
+        return (!nuevaInicio.isBefore(originalInicio) && !nuevaFin.isAfter(originalFin));
     }
 }
