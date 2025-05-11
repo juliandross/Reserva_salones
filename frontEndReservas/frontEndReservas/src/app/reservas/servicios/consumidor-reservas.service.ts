@@ -24,23 +24,40 @@ export class ConsumidorReservasService {
     // Agregar ':00' al final si solo tiene 'HH:mm'
     return `${time}:00`;
   }
-
-getReservas(): Observable<Reserva[]> {
-  console.log("Llamando a la API para obtener reservas");
-  return this.htpp.get<Reserva[]>(`${this.apiUrl}/reservas`, { headers: this.httpHeaders }).pipe(
-    tap((reservas) => {
-      if (reservas.length === 0) {
-        console.log("No hay reservas disponibles.");
-      } else {
-        console.log("Reservas obtenidas:", reservas);
+  getSalonesDisponibles(fecha: string, horaInicio: string, horaFin: string): Observable<{ id: number; numeroDeSalon: number }[]> {
+    console.log("Llamando a la API para obtener salones disponibles");
+    return this.htpp.get<{ id: number; numeroDeSalon: number }[]>(
+      `${this.apiUrl}/salones/disponibles`,
+      {
+        headers: this.httpHeaders,
+        params: { fecha, horaInicio, horaFin }
       }
-    }),
-    catchError((error) => {
-      console.error("Error al obtener reservas:", error);
-      return throwError(() => new Error("Error al obtener reservas"));
-    })
-  );
-}
+    ).pipe(
+      tap((salones) => {
+        console.log("Salones disponibles obtenidos:", salones);
+      }),
+      catchError((error) => {
+        console.error("Error al obtener salones disponibles:", error);
+        return throwError(() => new Error("Error al obtener salones disponibles"));
+      })
+    );
+  }
+  getReservas(): Observable<Reserva[]> {
+    console.log("Llamando a la API para obtener reservas");
+    return this.htpp.get<Reserva[]>(`${this.apiUrl}/reservas`, { headers: this.httpHeaders }).pipe(
+      tap((reservas) => {
+        if (reservas.length === 0) {
+          console.log("No hay reservas disponibles.");
+        } else {
+          console.log("Reservas obtenidas:", reservas);
+        }
+      }),
+      catchError((error) => {
+        console.error("Error al obtener reservas:", error);
+        return throwError(() => new Error("Error al obtener reservas"));
+      })
+    );
+  }
   createReserva(reserva: ReservaCreacion): Observable<RespuestaCreacionReserva> {
     console.log("Llamando a la API para crear una reserva", reserva);
     // Validar y formatear las horas

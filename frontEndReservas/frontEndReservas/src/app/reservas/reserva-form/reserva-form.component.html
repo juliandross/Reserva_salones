@@ -28,7 +28,6 @@
             </div>
         </div>
 
-
         <!-- Número de Salón -->
         <div class="form-group">
             <label for="numeroSalon">Número de Salón:</label>
@@ -41,13 +40,10 @@
             >
                 <option value="" disabled selected>Seleccione un salón</option>
                 <option *ngFor="let salon of salones" [value]="salon.numeroDeSalon">
-                {{ salon.numeroDeSalon }}
+                    {{ salon.numeroDeSalon }}
                 </option>
             </select>
-            <div
-                *ngIf="reservaForm.submitted && !reservaForm.controls['numeroSalon']?.valid"
-                class="text-danger"
-            >
+            <div *ngIf="reservaForm.submitted && !reservaForm.controls['numeroSalon']?.valid" class="text-danger">
                 El campo número de salón es obligatorio.
             </div>
         </div>
@@ -55,7 +51,15 @@
         <!-- Fecha -->
         <div class="form-group">
             <label for="fecha">Fecha:</label>
-            <input type="date" id="fecha" name="fecha" class="form-control" [(ngModel)]="reserva.fecha" required />
+            <input
+                type="date"
+                id="fecha"
+                name="fecha"
+                class="form-control"
+                [(ngModel)]="reserva.fecha"
+                (change)="onDateOrTimeChange()"
+                required
+            />
             <div *ngIf="reservaForm.submitted && !reservaForm.controls['fecha']?.valid" class="text-danger">
                 El campo fecha es obligatorio.
             </div>
@@ -64,7 +68,15 @@
         <!-- Hora de Inicio -->
         <div class="form-group">
             <label for="horaInicio">Hora de Inicio:</label>
-            <input type="time" id="horaInicio" name="horaInicio" class="form-control" [(ngModel)]="reserva.horaInicio" required />
+            <input
+                type="time"
+                id="horaInicio"
+                name="horaInicio"
+                class="form-control"
+                [(ngModel)]="reserva.horaInicio"
+                (change)="onDateOrTimeChange()"
+                required
+            />
             <div *ngIf="reservaForm.submitted && !reservaForm.controls['horaInicio']?.valid" class="text-danger">
                 El campo hora de inicio es obligatorio.
             </div>
@@ -73,7 +85,15 @@
         <!-- Hora de Fin -->
         <div class="form-group">
             <label for="horaFin">Hora de Fin:</label>
-            <input type="time" id="horaFin" name="horaFin" class="form-control" [(ngModel)]="reserva.horaFin" required />
+            <input
+                type="time"
+                id="horaFin"
+                name="horaFin"
+                class="form-control"
+                [(ngModel)]="reserva.horaFin"
+                (change)="onDateOrTimeChange()"
+                required
+            />
             <div *ngIf="reservaForm.submitted && !reservaForm.controls['horaFin']?.valid" class="text-danger">
                 El campo hora de fin es obligatorio.
             </div>
