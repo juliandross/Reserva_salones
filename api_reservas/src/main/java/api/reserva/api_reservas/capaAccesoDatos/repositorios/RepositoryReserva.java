@@ -25,6 +25,8 @@ public class RepositoryReserva {
     }
     //Crear reserva
     public ReservaEntity crearReserva(ReservaEntity reserva) {
+        //Estado predeterminado = "PENDIENTE"
+        reserva.setEstado("PENDIENTE");
         ReservaEntity reservaEnCreacion = null;
         System.out.println("Creando reserva en fecha (repositorio):" + reserva.getFecha());
         // Validar que el salón no sea null y exista
